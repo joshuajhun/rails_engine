@@ -25,8 +25,7 @@ class Api::V1::MerchantsControllerTest < ActionController::TestCase
   end
 
   test ' you can find a merchant by id' do
-    skip
-    get :find, format: :json, 'id' => "1"
+    get :find, format: :json, id: 1
     assert_response :success
   end
 end
