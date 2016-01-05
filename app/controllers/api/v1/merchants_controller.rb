@@ -9,11 +9,11 @@ class Api::V1::MerchantsController < ApplicationController
     respond_with Merchant.find_by(id: params[:id])
   end
 
-  def find
-    if params.first.first == 'id'
-      respond_with Merchant.find( params.first.last.to_i)
-    else
-      respond_with Merchant.where("#{params.first.first} ILIKE ?", params.first.last)
+    def find
+      if params['name']
+        respond_with Merchant.where("#{params.first.first} ILIKE ?", params.first.last).first
+      else
+        respond_with Merchant.where("#{params.first.first}": params.first.last).first
+      end
     end
-  end
 end

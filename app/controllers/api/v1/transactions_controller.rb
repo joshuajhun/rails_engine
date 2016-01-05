@@ -8,4 +8,12 @@ class Api::V1::TransactionsController < ApplicationController
   def show
     respond_with Transaction.find_by(id: params[:id])
   end
+
+  def find
+    if params['credit_card_number'] || params['result']
+      respond_with Transaction.where("#{params.first.first} ILIKE ?", params.first.last).first
+    else
+      respond_with Transaction.where("#{params.first.first}": params.first.last).first
+    end
+  end
 end
