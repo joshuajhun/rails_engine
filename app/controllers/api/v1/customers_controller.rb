@@ -11,6 +11,7 @@ class Api::V1::CustomersController < ApplicationController
 
   def find
     if params['first_name'] || params['last_name']
+      respond_with Customer.find_by(customer_params)
       respond_with Customer.where("#{params.first.first} ILIKE ?", params.first.last).first
     else
       respond_with Customer.where("#{params.first.first}": params.first.last).first
@@ -27,6 +28,14 @@ class Api::V1::CustomersController < ApplicationController
 
   def random
     respond_with Customer.random
+  end
+
+  def invoices
+    respond_with Customer.find(params[:id]).invoices
+  end
+
+  def transactions
+    respond_with Customer.find(params[:id]).transactions
   end
 
 end
