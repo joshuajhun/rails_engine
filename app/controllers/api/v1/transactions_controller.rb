@@ -24,4 +24,8 @@ class Api::V1::TransactionsController < ApplicationController
       respond_with Transaction.where("#{params.first.first}": params.first.last)
     end
   end
+
+  def random
+  respond_with Transaction.random
+  end
 end
