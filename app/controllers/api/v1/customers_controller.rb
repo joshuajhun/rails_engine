@@ -24,4 +24,9 @@ class Api::V1::CustomersController < ApplicationController
       respond_with Customer.where("#{params.first.first}": params.first.last)
     end
   end
+
+  def random
+    respond_with Customer.random
+  end
+
 end
