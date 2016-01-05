@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :merchants,     only:   [:index,:show, :find?], defaults: {format: :json} do
         collection do
-          get 'find', to: "merchants#find"
+          get 'find'
         end
       end
       resources :customers,     except: [:new, :edit], defaults: {format: :json}

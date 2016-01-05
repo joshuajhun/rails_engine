@@ -7,6 +7,7 @@ namespace :data do
 
     CSV.foreach(merchant, :headers => true) do |row|
       data = row.to_hash
+      byebug
       Merchant.create!(data)
       puts "created merchant #{data['name']}"
     end
