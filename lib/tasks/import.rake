@@ -1,4 +1,4 @@
-require 'csv'
+  require 'csv'
 
 namespace :data do
   task :import => :environment do
