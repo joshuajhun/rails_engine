@@ -7,7 +7,6 @@ namespace :data do
 
     CSV.foreach(merchant, :headers => true) do |row|
       data = row.to_hash
-      byebug
       Merchant.create!(data)
       puts "created merchant #{data['name']}"
     end
@@ -31,9 +30,13 @@ namespace :data do
     transactions = "#{Rails.root}/lib/assets/transactions.csv"
 
     CSV.foreach(transactions, :headers => true) do |row|
-      data = row.to_hash
-      Transaction.create!(data)
-      puts "created transation with credit_card_number #{data['credit_card_number']}"
+      Transaction.create!({ invoice_id: row['invoice_id'],
+            credit_card_number: row['credit_card_number'],
+                        result: row['result'],
+                    created_at: row['created_at'],
+                    updated_at: row['udpated_at']
+                          })
+      puts "created transation with credit_card_number #{row['credit_card_number']}"
     end
 
     item = "#{Rails.root}/lib/assets/items.csv"
