@@ -12,4 +12,8 @@ class Api::V1::InvoiceItemsController < ApplicationController
   def find
     respond_with InvoiceItem.where("#{params.first.first}": params.first.last).first
   end
+
+  def find_all
+    respond_with InvoiceItem.where("#{params.first.first}": params.first.last)
+  end
 end

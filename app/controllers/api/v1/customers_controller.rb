@@ -16,4 +16,12 @@ class Api::V1::CustomersController < ApplicationController
       respond_with Customer.where("#{params.first.first}": params.first.last).first
     end
   end
+
+  def find_all
+    if params['first_name'] || params['last_name']
+      respond_with Customer.where("#{params.first.first} ILIKE ?", params.first.last)
+    else
+      respond_with Customer.where("#{params.first.first}": params.first.last)
+    end
+  end
 end
