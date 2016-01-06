@@ -2,23 +2,27 @@ require 'test_helper'
 
 class Api::V1::InvoiceItemsControllerTest < ActionController::TestCase
   test "api serves up the index " do
+    create(:invoice_item)
     get :index, format: :json
     assert_response :success
   end
 
   test 'api allows you to view the show of a specific customer' do
+    create(:invoice_item)
     get :show, format: :json, id: InvoiceItem.first.id
     assert_response :success
-    assert_equal Invoice.first.id, json_response['id']
+    assert_equal InvoiceItem.first.id, json_response['id']
   end
 
   test 'api is showing you 1 record' do
+      create(:invoice_item)
     get :show, format: :json, id: InvoiceItem.first.id
 
     assert_kind_of Hash, json_response
   end
 
   test 'you can find by a single attribute' do
+    create(:invoice_item)
     get :find, format: :json, id: InvoiceItem.first.id
     assert_response :success
 
@@ -35,6 +39,7 @@ class Api::V1::InvoiceItemsControllerTest < ActionController::TestCase
   end
 
   test ' you can find a invoice items by id' do
+    create(:invoice_item)
     get :find, format: :json, id: InvoiceItem.first.id
 
     assert_response :success
@@ -42,7 +47,27 @@ class Api::V1::InvoiceItemsControllerTest < ActionController::TestCase
   end
 
   test '#findall returns more than one record' do
+    create(:invoice_item)
+    create(:invoice_item)
     get :find_all, format: :json, quantity: InvoiceItem.first.quantity
     assert_equal InvoiceItem.count, json_response.count
   end
+
+  test "random responds to json" do
+    get :random, format: :json
+    assert_response :success
+  end
+
+  test '#invoice responds to json' do
+    create(:invoice_item)
+    get :invoice, format: :json, id: InvoiceItem.first.id
+    assert_response :success
+  end
+
+  test '#item responds to json' do
+    create(:invoice_item)
+    get :item, format: :json, id: InvoiceItem.first.id
+    assert_response :success
+  end
+
 end
