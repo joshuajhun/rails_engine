@@ -7,28 +7,45 @@ class Api::V1::TransactionsControllerTest < ActionController::TestCase
   end
 
   test 'api allows you to view the show of a specific customer' do
-    get :show, format: :json, id: 1
+    get :show, format: :json, id: Transaction.first.id
     assert_response :success
+    assert_equal Transaction.first.id, json_response['id']
+  end
+
+  test '#show will return for you a single record' do
+    get :show, format: :json, id: Transaction.first.id
+
+    assert_kind_of Hash, json_response
   end
 
   test 'you can find by a single attribute' do
-    get :find, format: :json, id: 2856
+    get :find, format: :json, id: Transaction.first.id
     assert_response :success
+    assert_equal Transaction.first.id, json_response['id']
 
-    get :find, format: :json, credit_card_number: '4800749911485986'
+    get :find, format: :json, credit_card_number: Transaction.first.credit_card_number
     assert_response :success
+    assert_equal Transaction.first.credit_card_number, json_response['credit_card_number']
   end
 
   test 'case does not matter with a single attribute' do
-    get :find, format: :json, result: 'success'
+    get :find, format: :json, result: Transaction.first.result
     assert_response :success
+    assert_equal Transaction.first.result, json_response['result']
 
-    get :find, format: :json, result: 'FAILED'
+    get :find, format: :json, result: Transaction.first.result
     assert_response :success
+    assert_equal Transaction.first.result, json_response['result']
   end
 
   test ' you can find a Transaction by id' do
-    get :find, format: :json, id: 1
+    get :find, format: :json, id: Transaction.first.id
     assert_response :success
+    assert_equal Transaction.first.id, json_response['id']
+  end
+
+  test '#find returns one record' do
+    get :find, format: :json, credit_card_number: Transaction.first.credit_card_number
+    assert_kind_of Hash, json_response
   end
 end
