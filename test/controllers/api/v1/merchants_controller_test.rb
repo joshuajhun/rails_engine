@@ -71,10 +71,27 @@ class Api::V1::MerchantsControllerTest < ActionController::TestCase
     get :items, format: :json, id: Merchant.first.id
     assert_response :success
   end
+
+  test '#items returns records associated to merchants' do
+    merchant = create(:merchant)
+    item = create(:item, merchant: merchant)
+    get :items, format: :json, id: merchant.id
+
+
+    assert_equal merchant.id , json_response.first['merchant_id']
+  end
+
   test '#invoices responds to json' do
     create(:merchant)
     get :invoices, format: :json, id: Merchant.first.id
     assert_response :success
   end
 
+  test '#invoices returns records associated with mechants' do
+    merchant = create(:merchant)
+    invoice  = create(:invoice, merchant: merchant)
+    get :invoices, format: :json, id: merchant.id
+
+    assert_equal merchant.id, json_response.first['merchant_id']
+  end 
 end

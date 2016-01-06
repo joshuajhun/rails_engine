@@ -13,6 +13,7 @@ FactoryGirl.define do
     name 'pizza'
     description 'it taste good'
     unit_price 50.00
+    merchant
   end
 
   factory :transaction do

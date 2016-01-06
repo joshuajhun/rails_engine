@@ -66,10 +66,30 @@ class Api::V1::InvoicesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test '#transactions relationship returns transactions linked' do
+    invoice  = create(:invoice)
+    transaction = create(:transaction, invoice: invoice)
+    transaction = create(:transaction, invoice: invoice)
+    get :transactions, format: :json, id: invoice.id
+
+    assert_equal invoice.id, json_response.first['invoice_id']
+    assert_equal 2, json_response.count
+  end
+
   test '#invoice_items responds to json' do
     create(:invoice)
     get :invoice_items, format: :json, id: Invoice.first.id
     assert_response :success
+  end
+
+  test '#invoice_items returns the correct items linked' do
+    invoice = create(:invoice)
+    create(:invoice_item, invoice: invoice)
+    create(:invoice_item, invoice: invoice)
+    get :invoice_items, format: :json, id: invoice.id
+
+    assert_equal invoice.id, json_response.first['invoice_id']
+    assert_equal 2, json_response.count
   end
 
   test '#items responds to json' do
@@ -78,10 +98,27 @@ class Api::V1::InvoicesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test '#items returns the correct items related to 'do
+   invoice = create(:invoice)
+   item    = create(:item)
+   invoice_item = create(:invoice_item, item: item, invoice: invoice)
+   get :items, format: :json, id: invoice.id
+
+   assert_equal invoice.invoice_items.first['item_id'], json_response.first['id']
+ end
+
   test '#customer responds to json' do
     create(:invoice)
     get :customer, format: :json, id: Invoice.first.id
     assert_response :success
+  end
+
+  test '#item returns records associtated with invoice' do
+    customer = create(:customer)
+    invoice  = create(:invoice, customer: customer)
+    get :customer, format: :json, id: invoice.id
+
+    assert_equal invoice.customer_id , json_response['id']
   end
 
   test '#merchant responds to json' do
@@ -90,4 +127,11 @@ class Api::V1::InvoicesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test '#merchant returns records associated to invoice' do
+    merchant = create(:merchant)
+    invoice  = create(:invoice, merchant: merchant)
+    get :merchant, format: :json, id: invoice.id
+
+    assert_equal invoice.merchant_id, json_response['id']
+  end 
 end

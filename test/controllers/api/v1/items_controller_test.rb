@@ -67,10 +67,22 @@ class Api::V1::ItemsControllerTest < ActionController::TestCase
     get :random, format: :json
     assert_response :success
   end
+
   test '#invoice_items responds to json' do
     create(:item)
     get :invoice_items, format: :json, id: Item.first.id
     assert_response :success
+  end
+
+  test '#invoice_items returns records assoiciated with items' do
+    item = create(:item)
+    invoice_item = create(:invoice_item, item: item)
+    create(:invoice_item, item: item)
+
+    get :invoice_items, format: :json, id: item.id
+
+    assert_equal item.id, json_response.first['item_id']
+    assert_equal 2, json_response.count
   end
 
   test '#merchant responds to json' do
@@ -79,5 +91,11 @@ class Api::V1::ItemsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test '#merchant returns records associated with items' do
+    merchant = create(:merchant)
+    item = create(:item, merchant: merchant)
+    get :merchant, format: :json, id: item.id
 
+    assert_equal item.merchant_id, json_response['id']
+  end
 end

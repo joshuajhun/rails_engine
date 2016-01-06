@@ -70,4 +70,20 @@ class Api::V1::InvoiceItemsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test '#invoice returns the invoice information tied to the invoice_item' do
+    invoice = create(:invoice)
+    invoice_item = create(:invoice_item, invoice: invoice)
+    get :invoice, format: :json, id: invoice_item.id
+
+    assert_equal invoice_item.invoice_id , json_response['id']
+  end
+
+  test '#item returns the item associated to the invoice_item' do
+    item = create(:item)
+    invoice_item = create(:invoice_item, item: item)
+
+    get :item, format: :json, id: invoice_item.id
+
+    assert_equal invoice_item.item_id , json_response['id']
+  end
 end

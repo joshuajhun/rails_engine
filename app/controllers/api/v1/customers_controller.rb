@@ -37,4 +37,12 @@ class Api::V1::CustomersController < ApplicationController
   def transactions
     respond_with Customer.find(params[:id]).transactions
   end
+
+  def favorite_merchant
+    invoice_ids_array = Customer.find(params[:id]).transactions.where(result: "success").pluck(:invoice_id)
+    merchant_ids_array = Invoice.find(invoice_ids_array).map { |invoice| invoice.merchant_id }
+    freq = merchants_ids_array.inject(Hash.new(0)) { |h,v| h[v] += 1; h }
+    favorite_merchant_id = merchants_array.max_by { |v| freq[v] }
+    respond_with Merchant.find(favorite_merchant_id)
+  end
 end

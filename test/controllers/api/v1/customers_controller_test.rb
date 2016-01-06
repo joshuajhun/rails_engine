@@ -86,5 +86,26 @@ class Api::V1::CustomersControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test '#invoice returns a specific customer data' do
+    customer = create(:customer)
+    create(:invoice, customer: customer)
+    create(:invoice, customer: customer)
+    get :invoices, format: :json, id: customer.id
+
+    assert_equal customer.id, json_response.first['customer_id']
+    assert_equal 2, json_response.count
+  end
+
+  test '#transactions return speicific customer data' do
+    customer =  create(:customer)
+    invoice  =  create(:invoice, customer: customer)
+    create(:transaction, invoice: invoice)
+    create(:transaction, invoice: invoice)
+    get :transactions, format: :json, id: customer.id
+
+    assert_equal invoice.id, json_response.first['invoice_id']
+    assert_equal customer.id,  Invoice.find(json_response.first['invoice_id']).customer_id
+    assert_equal 2, json_response.count
+  end
 
 end
