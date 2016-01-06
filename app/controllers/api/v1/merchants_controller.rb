@@ -11,9 +11,9 @@ class Api::V1::MerchantsController < ApplicationController
 
   def find
     if params['name']
-      respond_with Merchant.where("#{params.first.first} ILIKE ?", params.first.last).first
+      respond_with Merchant.find_by("#{params.first.first} ILIKE ?", params.first.last)
     else
-      respond_with Merchant.where("#{params.first.first}": params.first.last).first
+      respond_with Merchant.find_by(params.first.first => params.first.last)
     end
   end
 
@@ -21,7 +21,7 @@ class Api::V1::MerchantsController < ApplicationController
     if params['name']
       respond_with Merchant.where("#{params.first.first} ILIKE ?", params.first.last)
     else
-      respond_with Merchant.where("#{params.first.first}": params.first.last)
+      respond_with Merchant.where(params.first.first => params.first.last)
     end
   end
 

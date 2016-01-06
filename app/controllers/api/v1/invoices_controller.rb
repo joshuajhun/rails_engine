@@ -11,9 +11,9 @@ class Api::V1::InvoicesController < ApplicationController
 
   def find
     if params['status']
-      respond_with Invoice.where("#{params.first.first} ILIKE ?", params.first.last).first
+      respond_with Invoice.find_by("#{params.first.first} ILIKE ?", params.first.last)
     else
-      respond_with Invoice.where("#{params.first.first}": params.first.last).first
+      respond_with Invoice.find_by(params.first.first => params.first.last)
     end
   end
 

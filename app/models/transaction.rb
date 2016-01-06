@@ -1,5 +1,5 @@
 class Transaction < ActiveRecord::Base
-  default_scope -> { order('id DESC') }
+  default_scope -> { order(id: :desc) }
   belongs_to :invoice
   belongs_to :customer
 
