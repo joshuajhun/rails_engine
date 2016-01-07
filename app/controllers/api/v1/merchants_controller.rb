@@ -18,7 +18,6 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def most_revenue
-    binding.pry
     respond_with Merchant.most_revenue_merchant(params[:quantity])
   end
 
