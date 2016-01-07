@@ -10,20 +10,11 @@ class Api::V1::CustomersController < ApplicationController
   end
 
   def find
-    if params['first_name'] || params['last_name']
-    #  respond_with Customer.find_by(customer_params)
-      respond_with Customer.find_by("#{params.first.first} ILIKE ?", params.first.last)
-    else
-      respond_with Customer.find_by(params.first.first => params.first.last)
-    end
+    respond_with Customer.find_by(customer_params)
   end
 
   def find_all
-    if params['first_name'] || params['last_name']
-      respond_with Customer.where("#{params.first.first} ILIKE ?", params.first.last)
-    else
-      respond_with Customer.where(params.first.first => params.first.last)
-    end
+    respond_with Customer.where(customer_params)
   end
 
   def random
@@ -36,5 +27,14 @@ class Api::V1::CustomersController < ApplicationController
 
   def transactions
     respond_with Customer.find(params[:id]).transactions
+  end
+
+  def favorite_merchant
+    respond_with Customer.fav_merchant(params[:id])
+  end
+
+  private
+  def customer_params
+    params.permit(:first_name, :last_name, :created_at, :updated_at, :id)
   end
 end

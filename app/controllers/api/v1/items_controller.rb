@@ -10,19 +10,11 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def find
-    if params['name'] || params['description']
-      respond_with Item.find_by("#{params.first.first} ILIKE ?", params.first.last)
-    else
-      respond_with Item.find_by(params.first.first => params.first.last)
-    end
+    respond_with Item.find_by(items_params)
   end
 
   def find_all
-    if params['name'] || params['description']
-      respond_with Item.where("#{params.first.first} ILIKE ?", params.first.last)
-    else
-      respond_with Item.where(params.first.first => params.first.last)
-    end
+    respond_with Item.where(items_params)
   end
 
   def random
@@ -37,4 +29,12 @@ class Api::V1::ItemsController < ApplicationController
     respond_with Item.find(params[:id]).merchant
   end
 
+  def best_day
+    respond_with ({ "best_day" => Item.joins(:invoice_items).where(id: params[:id]).group("items.id,date(invoice_items.created_at)").count.keys[0]})
+  end
+
+  private
+  def items_params
+    params.permit(:id, :description, :unit_price, :merchant_id, :created_at, :updated_at, :name)
+  end
 end
