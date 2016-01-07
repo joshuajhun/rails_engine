@@ -44,5 +44,5 @@ class Merchant < ActiveRecord::Base
     pending_invoice_ids = Transaction.where(invoice_id: invoice_ids).where(result: "failed").pluck(:invoice_id)
     customer_ids = Invoice.find(pending_invoice_ids).map{|invoice| invoice.customer.id}
     Customer.find(customer_ids)
-  end
+    end
 end

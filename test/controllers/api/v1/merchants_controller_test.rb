@@ -157,7 +157,70 @@ class Api::V1::MerchantsControllerTest < ActionController::TestCase
     assert_equal customer1.id, json_response['id']
   end
 
-  test '#most items returns records associated with merchant' do
-    
+test '#pending customer with pending invoice ' do
+    merchant1 = create(:merchant)
+    customer1 = create(:customer)
+    invoice1  = create(:invoice, merchant: merchant1, customer: customer1)
+    transaction1 = create(:transaction, invoice: invoice1)
+    invoice2  = create(:invoice, merchant: merchant1, customer: customer1)
+    transaction2 = create(:transaction, invoice: invoice2)
+
+    customer2 = create(:customer, first_name: 'jhun')
+    invoice3  = create(:invoice, merchant: merchant1, customer: customer2, status: 'failed')
+    transaction3 = create(:transaction, invoice: invoice3, result: 'failed' )
+
+    get :customers_with_pending_invoices, format: :json, id: merchant1.id
+    assert_equal customer2.id, json_response.last['id']
+  end
+
+  test '#most revenue returns correct records to merchant' do
+    merchant1 = create(:merchant)
+    customer1 = create(:customer)
+    item1     = create(:item)
+
+    invoice1  = create(:invoice, merchant: merchant1, customer: customer1)
+    invoice2  = create(:invoice, merchant: merchant1, customer: customer1)
+
+    transaction1 = create(:transaction, invoice: invoice1)
+    transaction2 = create(:transaction, invoice: invoice2)
+
+    invoice_item = create(:invoice_item, invoice: invoice1, item: item1)
+    invoice_item2 = create(:invoice_item, invoice: invoice2, item: item1)
+
+    merchant2 = create(:merchant, name: 'merch')
+    customer2 = create(:customer, first_name: 'jhun')
+    invoice3  = create(:invoice, merchant: merchant2, customer: customer2)
+    invoice_item3 = create(:invoice_item, invoice: invoice3, item: item1)
+    transaction3 = create(:transaction, invoice: invoice3 )
+
+
+    get :most_items, format: :json, id: merchant1.id
+    assert_response :success
+  end
+
+  test '#most items returns correct records to merchant' do
+    merchant1 = create(:merchant)
+    customer1 = create(:customer)
+    item1     = create(:item)
+
+    invoice1  = create(:invoice, merchant: merchant1, customer: customer1)
+    invoice2  = create(:invoice, merchant: merchant1, customer: customer1)
+
+    transaction1 = create(:transaction, invoice: invoice1)
+    transaction2 = create(:transaction, invoice: invoice2)
+
+    invoice_item = create(:invoice_item, invoice: invoice1, item: item1)
+    invoice_item2 = create(:invoice_item, invoice: invoice2, item: item1)
+
+    merchant2 = create(:merchant, name: 'merch')
+    customer2 = create(:customer, first_name: 'jhun')
+    invoice3  = create(:invoice, merchant: merchant2, customer: customer2)
+    invoice_item3 = create(:invoice_item, invoice: invoice3, item: item1)
+    transaction3 = create(:transaction, invoice: invoice3 )
+
+    get :most_items, format: :json, id: merchant1.id
+
+    assert_response :success
+  end
 
 end
