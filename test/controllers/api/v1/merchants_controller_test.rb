@@ -104,6 +104,6 @@ class Api::V1::MerchantsControllerTest < ActionController::TestCase
     transaction2  = create(:transaction, invoice: invoice2)
     transaction3  = create(:transaction, invoice: invoice3)
 
-    get :revenue, format: :jsoln, id: merchant.id
+    get :revenue, format: :json, id: merchant.id
   end
 end

@@ -10,19 +10,11 @@ class Api::V1::InvoicesController < ApplicationController
   end
 
   def find
-    if params['status']
-      respond_with Invoice.find_by("#{params.first.first} ILIKE ?", params.first.last)
-    else
-      respond_with Invoice.find_by(params.first.first => params.first.last)
-    end
+    respond_with Invoice.find_by(invoice_params)
   end
 
   def find_all
-    if params['status']
-      respond_with Invoice.where("#{params.first.first} ILIKE ?", params.first.last)
-    else
-      respond_with Invoice.where("#{params.first.first}": params.first.last)
-    end
+    respond_with Invoice.where(invoice_params)
   end
 
   def random
@@ -47,5 +39,10 @@ class Api::V1::InvoicesController < ApplicationController
 
   def merchant
     respond_with Invoice.find(params[:id]).merchant
+  end
+
+  private
+  def invoice_params
+    params.permit(:id, :customer_id, :merchant_id, :status, :created_at, :updated_at)
   end
 end

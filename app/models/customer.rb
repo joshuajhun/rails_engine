@@ -10,4 +10,12 @@ class Customer < ActiveRecord::Base
   def self.currency_format
     self.unit_price = unit_pice/100.00
   end
+
+  def self.fav_merchant(id)
+    invoice_ids_array = Customer.find(id).transactions.where(result: "success").pluck(:invoice_id)
+    merchant_ids_array = Invoice.find(invoice_ids_array).map { |invoice| invoice.merchant_id }
+    sales = merchant_ids_array.inject(Hash.new(0)) { |h,v| h[v] += 1; h }
+    top_merch_id = merchant_ids_array.max_by { |v| sales[v] }
+    Merchant.find(top_merch_id)
+  end
 end

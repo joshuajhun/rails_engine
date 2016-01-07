@@ -10,21 +10,11 @@ class Api::V1::TransactionsController < ApplicationController
   end
 
   def find
-    if params['credit_card_number'] || params['result']
-      transaction = Transaction.where("#{params.first.first} ILIKE ?", params.first.last).first
-    else
-      transaction = Transaction.where("#{params.first.first}": params.first.last).first
-    end
-    respond_with transaction
+   respond_with Transaction.find_by(transaction_params)
   end
 
   def find_all
-    if params['credit_card_number'] || params['result']
-      transactions = Transaction.where("#{params.first.first} ILIKE ?", params.first.last)
-    else
-      transactions = Transaction.where("#{params.first.first}": params.first.last)
-    end
-    respond_with transactions
+    respond_with Transaction.where(transaction_params)
   end
 
   def random
@@ -33,5 +23,10 @@ class Api::V1::TransactionsController < ApplicationController
 
   def invoice
     respond_with Transaction.find(params[:id]).invoice
+  end
+
+  private
+  def transaction_params
+    params.permit(:id, :invoice_id, :credit_card_number, :result, :created_at, :updated_at)
   end
 end
