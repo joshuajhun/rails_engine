@@ -7,20 +7,20 @@ class Merchant < ActiveRecord::Base
     order("RANDOM()").first
   end
 
-  def calc_items
+  def calculate_items
     invoices.succesful.joins(:invoice_items).sum(:quantity)
   end
 
-  def calc_revenue
+  def calculate_revenue
     invoices.succesful.joins(:invoice_items).sum("unit_price * quantity")
   end
 
-  def self.most_items(quantity)
-    all.sort_by(&:calc_items).reverse[0...quantity.to_i]
+  def self.most_items_merchant(quantity)
+    all.sort_by(&:calculate_items).reverse[0...quantity.to_i]
   end
 
-  def self.most_revenue(quantity)
-    all.sort_by(&:calc_revenue).reverse[0...quantity.to_i]
+  def self.most_revenue_merchant(quantity)
+    all.sort_by(&:calculate_revenue).reverse[0...quantity.to_i]
   end
 
   def self.revenue_to_merchant(id)

@@ -7,7 +7,37 @@ class Api::V1::InvoicesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'api allows you to view the show of a specific customer' do
+  test '#index returns and array of records' do
+    get :index, format: :json
+
+    assert_kind_of Array, json_response
+  end
+
+  test '#index returns the correct number of items' do
+    get :index, format: :json
+
+    assert_equal Invoice.count, json_response.count
+  end
+
+  test '#index have correct properties' do
+  get :index, format: :json
+
+    json_response.each do |invoice|
+      assert invoice["customer_id"]
+      assert invoice['merchant_id']
+      assert invoice['status']
+    end
+  end
+
+  test '#show returns the correct invoice' do
+    create(:invoice)
+    get :show, format: :json, id: Invoice.first.id
+    assert_response :success
+
+    assert_equal Invoice.first.id, json_response['id']
+  end
+
+  test '#show returns 1  invoice' do
     create(:invoice)
     get :show, format: :json, id: Invoice.first.id
     assert_response :success
@@ -26,14 +56,6 @@ class Api::V1::InvoicesControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal Invoice.first.status, json_response['status']
 
-  end
-
-  test 'case does not matter with a single attribute' do
-    create(:invoice)
-    get :find, format: :json, status: Invoice.first.status.upcase
-
-    assert_response :success
-    assert_equal Invoice.first.status, json_response['status']
   end
 
   test ' you can find a invoice by id' do
@@ -133,5 +155,5 @@ class Api::V1::InvoicesControllerTest < ActionController::TestCase
     get :merchant, format: :json, id: invoice.id
 
     assert_equal invoice.merchant_id, json_response['id']
-  end 
+  end
 end

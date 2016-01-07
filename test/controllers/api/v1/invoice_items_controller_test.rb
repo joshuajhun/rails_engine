@@ -7,14 +7,38 @@ class Api::V1::InvoiceItemsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'api allows you to view the show of a specific customer' do
+  test '#index returns and array of records' do
+    get :index, format: :json
+
+    assert_kind_of Array, json_response
+  end
+
+  test '#index returns the correct number of items' do
+    get :index, format: :json
+
+    assert_equal InvoiceItem.count, json_response.count
+  end
+
+  test '#index have correct properties' do
+  get :index, format: :json
+
+    json_response.each do |invoice_item|
+      assert invoice_item["item_id"]
+      assert invoice_item['invoice_id']
+      assert invoice_item['quantity']
+      assert invoice_item['unit_price']
+    end
+  end
+
+
+  test '#show returns correct invoice item' do
     create(:invoice_item)
     get :show, format: :json, id: InvoiceItem.first.id
     assert_response :success
     assert_equal InvoiceItem.first.id, json_response['id']
   end
 
-  test 'api is showing you 1 record' do
+  test '#show returns 1 invoice item' do
       create(:invoice_item)
     get :show, format: :json, id: InvoiceItem.first.id
 

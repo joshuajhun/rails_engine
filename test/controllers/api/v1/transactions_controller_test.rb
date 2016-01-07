@@ -6,14 +6,38 @@ class Api::V1::TransactionsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'api allows you to view the show of a specific customer' do
+  test '#index returns and array of records' do
+    get :index, format: :json
+
+    assert_kind_of Array, json_response
+  end
+
+  test '#index returns the correct number of items' do
+    get :index, format: :json
+
+    assert_equal Transaction.count, json_response.count
+  end
+
+  test '#index contains correct properties' do
+  get :index, format: :json
+
+    json_response.each do |transaction|
+      assert transaction["result"]
+      assert transaction['invoice_id']
+      assert transaction['credit_card_number']
+      assert transaction['result']
+    end
+  end
+
+
+  test '#show returns correct transaction' do
     create(:transaction)
     get :show, format: :json, id: Transaction.first.id
     assert_response :success
     assert_equal Transaction.first.id, json_response['id']
   end
 
-  test '#show will return for you a single record' do
+  test '#show returns 1 transaction' do
     create(:transaction)
     get :show, format: :json, id: Transaction.first.id
 
@@ -29,17 +53,6 @@ class Api::V1::TransactionsControllerTest < ActionController::TestCase
     get :find, format: :json, credit_card_number: Transaction.first.credit_card_number
     assert_response :success
     assert_equal Transaction.first.credit_card_number, json_response['credit_card_number']
-  end
-
-  test 'case does not matter with a single attribute' do
-    create(:transaction)
-    get :find, format: :json, result: Transaction.first.result
-    assert_response :success
-    assert_equal Transaction.first.result, json_response['result']
-
-    get :find, format: :json, result: Transaction.first.result
-    assert_response :success
-    assert_equal Transaction.first.result, json_response['result']
   end
 
   test ' you can find a Transaction by id' do

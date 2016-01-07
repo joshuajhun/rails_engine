@@ -15,15 +15,15 @@ class Api::V1::MerchantsController < ApplicationController
 
   def find_all
     respond_with Merchant.where(merchant_params)
-
   end
 
   def most_revenue
-    respond_with Merchant.most_revenue(params[:quantity])
+    binding.pry
+    respond_with Merchant.most_revenue_merchant(params[:quantity])
   end
 
   def most_items
-    respond_with Merchant.most_items(params[:quantity])
+    respond_with Merchant.most_items_merchant(params[:quantity])
   end
 
   def random
