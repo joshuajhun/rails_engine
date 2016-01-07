@@ -10,4 +10,7 @@
     order("RANDOM()").first
   end
 
+  def self.succesful
+    joins(:transactions).where("result = 'success'")
+  end
 end

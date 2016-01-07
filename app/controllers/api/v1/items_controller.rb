@@ -37,4 +37,8 @@ class Api::V1::ItemsController < ApplicationController
     respond_with Item.find(params[:id]).merchant
   end
 
+  def best_day
+    respond_with ({ "best_day" => Item.joins(:invoice_items).where(id: params[:id]).group("items.id,date(invoice_items.created_at)").count.keys[0]})
+  end
+
 end

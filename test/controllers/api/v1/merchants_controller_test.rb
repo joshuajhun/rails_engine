@@ -93,5 +93,17 @@ class Api::V1::MerchantsControllerTest < ActionController::TestCase
     get :invoices, format: :json, id: merchant.id
 
     assert_equal merchant.id, json_response.first['merchant_id']
-  end 
+  end
+
+  test '#merchant returns records associated' do
+    merchant = create(:merchant)
+    invoice  = create(:invoice, merchant: merchant)
+    invoice2 = create(:invoice, merchant: merchant)
+    invoice3 = create(:invoice, merchant: merchant)
+    transaction1  = create(:transaction, invoice: invoice)
+    transaction2  = create(:transaction, invoice: invoice2)
+    transaction3  = create(:transaction, invoice: invoice3)
+
+    get :revenue, format: :jsoln, id: merchant.id
+  end
 end

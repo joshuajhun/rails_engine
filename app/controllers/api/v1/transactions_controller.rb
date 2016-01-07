@@ -11,18 +11,20 @@ class Api::V1::TransactionsController < ApplicationController
 
   def find
     if params['credit_card_number'] || params['result']
-      respond_with Transaction.where("#{params.first.first} ILIKE ?", params.first.last).first
+      transaction = Transaction.where("#{params.first.first} ILIKE ?", params.first.last).first
     else
-      respond_with Transaction.where("#{params.first.first}": params.first.last).first
+      transaction = Transaction.where("#{params.first.first}": params.first.last).first
     end
+    respond_with transaction
   end
 
   def find_all
     if params['credit_card_number'] || params['result']
-      respond_with Transaction.where("#{params.first.first} ILIKE ?", params.first.last)
+      transactions = Transaction.where("#{params.first.first} ILIKE ?", params.first.last)
     else
-      respond_with Transaction.where("#{params.first.first}": params.first.last)
+      transactions = Transaction.where("#{params.first.first}": params.first.last)
     end
+    respond_with transactions
   end
 
   def random
